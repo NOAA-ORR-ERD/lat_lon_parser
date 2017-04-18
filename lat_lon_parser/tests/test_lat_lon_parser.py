@@ -10,7 +10,7 @@ Tests for `lat_lon_parser` module.
 
 import pytest
 
-from lat_lon_parser import lat_lon_parser
+from lat_lon_parser import parser
 
 # test code
 test_values = [# decimal degrees
@@ -57,7 +57,7 @@ test_values = [# decimal degrees
 
 @pytest.mark.parametrize("string, value", test_values)
 def test_parse(string, value):
-    assert parse_lat_lon(string) == value
+    assert parse(string) == value
 
 invalid_values = ["some_crap",
                   "23.43.2",
@@ -69,5 +69,5 @@ invalid_values = ["some_crap",
 @pytest.mark.parametrize("string", invalid_values)
 def test_parse_invalid(string):
     with pytest.raises(ValueError):
-        parse_lat_lon(string)
+        parse(string)
 

@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from __future__ import unicode_literals, absolute_import, division, print_function
+
+
+from setuptools import setup, find_packages
 
 with open('README.rst') as readme_file:
-    readme = readme_file.read()
+    readme = readme_file.read().decode('utf-8')
 
 with open('HISTORY.rst') as history_file:
-    history = history_file.read()
+    history = history_file.read().decode('utf-8')
 
 requirements = [
     # TODO: put package requirements here
@@ -25,11 +28,7 @@ setup(
     author="Christopher Barker",
     author_email='Chris.Barker@noaa.gov',
     url='https://github.com/ChrisBarker-NOAA/lat_lon_parser',
-    packages=[
-        'lat_lon_parser',
-    ],
-    package_dir={'lat_lon_parser':
-                 'lat_lon_parser'},
+    packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
     zip_safe=False,
@@ -49,3 +48,4 @@ setup(
     test_suite='tests',
     tests_require=test_requirements
 )
+
