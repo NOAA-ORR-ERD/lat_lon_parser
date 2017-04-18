@@ -8,9 +8,11 @@ test_lat_lon_parser
 Tests for `lat_lon_parser` module.
 """
 
+from __future__ import unicode_literals, absolute_import, division, print_function
+
 import pytest
 
-from lat_lon_parser import parser
+from lat_lon_parser import parse
 
 # test code
 test_values = [# decimal degrees

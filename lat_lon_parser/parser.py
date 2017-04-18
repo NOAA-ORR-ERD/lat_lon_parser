@@ -48,18 +48,9 @@ Degrees, Minutes, Seconds: (really fun!!!)
   or -- lots of other combinations!
 
 """
-from __future__ import unicode_literals, division
-import unit_conversion
-import pytest
+from __future__ import unicode_literals, absolute_import, division, print_function
+import unit_conversion  # from: https://github.com/NOAA-ORR-ERD/PyNUCOS
 
-# # not needed -- upper-casing everything instead
-# translation_table = {ord("w"): "W",
-#                      ord("e"): "E",
-#                      ord("n"): "N",
-#                      ord("s"): "S",
-#                      ord("d"): "°",
-#                      ord("D"): "°",
-#                      }
 
 # Some are multiple characters, can't be done with translate
 replace_list = [('DEG', "°"),
@@ -111,31 +102,16 @@ def parse(string):
         return unit_conversion.LatLongConverter.ToDecDeg(*parts)
     except ValueError:
         raise
-    # # more complex approach -- any point?
-    # if '°' in string:
-    #     deg, min = string.split('°')
-    #     deg = float(deg)
-    #     min = min.replace("'"," ")
-    #     try:
-    #         min = float(min)
-    #         return unit_conversion.LatLongConverter.ToDecDeg(deg, min)
-    #     except ValueError:
-    #         # try minutes-seconds
-    #         min = min.replace('"', '')
-    #         min, sec = min.split()
-    #         min = float(min)
-    #         sec = float(sec)
-    #         return unit_conversion.LatLongConverter.ToDecDeg(deg, min, sec)
 
     raise ValueError("%s is not a valid coordinate string" % orig_string)
 
 
 if __name__ == "__main__":
     # print out all the forms that work
-    print "All these forms work:"
+    print("All these forms work:")
     for string, val in test_values:
-        print string
-    print "And these don't:"
+        print(string)
+    print("And these don't:")
     for string in invalid_values:
-        print string
+        print(string)
 
