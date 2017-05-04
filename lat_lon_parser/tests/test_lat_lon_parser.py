@@ -69,18 +69,23 @@ test_values = [# decimal degrees
                ("""-45 12 36.0""", -45.21),
                ]
 
+
 @pytest.mark.parametrize("string, value", test_values)
 def test_parse(string, value):
     tol = 12
     assert round(parse(string), tol) == round(value, tol)
 
+
 invalid_values = ["some_crap",
                   "23.43.2",
-                  #"23.43t",
+                  # "23.43t", # this is now OK -- the t will get tossed out.
                   "23.4 14.2",  # decimal in more than one field
                   """23.2d 14' 12.22" """,  # decimal in more than one field
-                  """3° -25' 48.0" N""", # negative in the middle
-                  """3° 25' -48.0" N""", # negative in the middle
+                  """3° -25' 48.0" N""",  # negative in the middle
+                  """3° 25' -48.0" N""",  # negative in the middle
+                  #
+                  "92 92",  # too large a minute value
+                  """3° 25' 61.0" N""",  # too large a second value
                   ]
 
 @pytest.mark.parametrize("string", invalid_values)
