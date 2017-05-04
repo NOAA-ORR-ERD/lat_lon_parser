@@ -76,9 +76,11 @@ def test_parse(string, value):
 
 invalid_values = ["some_crap",
                   "23.43.2",
-                  "23.43t",
+                  #"23.43t",
                   "23.4 14.2",  # decimal in more than one field
                   """23.2d 14' 12.22" """,  # decimal in more than one field
+                  """3° -25' 48.0" N""", # negative in the middle
+                  """3° 25' -48.0" N""", # negative in the middle
                   ]
 
 @pytest.mark.parametrize("string", invalid_values)

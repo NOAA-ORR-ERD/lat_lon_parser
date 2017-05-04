@@ -52,15 +52,9 @@ from __future__ import unicode_literals, absolute_import, division, print_functi
 import unit_conversion  # from: https://github.com/NOAA-ORR-ERD/PyNUCOS
 
 
-# Some are multiple characters, can't be done with translate
-replace_list = [('DEG', "°"),
-                ('D', "°"),
-                ('\N{MASCULINE ORDINAL INDICATOR}', "°"),
-                ('N', ""),  # these don't change anything
-                ('E', ""),
-                ('\N{PRIME}', "'"),  # the "proper" symbol for minutes
-                ('\N{DOUBLE PRIME}', '"'),  # the "proper" symbol for seconds
-                ]
+
+# new test version -- much simpler
+import re
 
 def parse(string):
     """
@@ -73,37 +67,89 @@ def parse(string):
     NOTE: This is a naive brute-force approach.
           I imagine someone that can make regular expressions dance could do better..
     """
+
+    # regex to remove all non-number values
+    patt = re.compile(r"[^0-9.-]")
+
     orig_string = string
+
     # clean up the string:
     string = string.strip().upper()  # uppercase everything, then fewer replace options
-    for swap in replace_list:
-        string = string.replace(*swap)
 
     # change W and S to a negative value
-    if 'W' in string:
-        string = '-' + string.replace('W', '')
-    if 'S' in string:
-        string = '-' + string.replace('S', '')
-    try:  # are we done?
-        val = float(string)
-        return val
-    except ValueError:  # that didn't work, keep going.
-        pass
+    if string.endswith('W'):
+        string = '-' + string[:-1]
+    elif string.endswith('S'):
+        string = '-' + string[:-1]
 
-    # not very robust in the face of multiple degree symbols, etc
-    # but very flexible and easy!
+    # get rid of everything that is not numbers
+    string = patt.sub(" ", string).strip()
 
-    # All "legitimate" symbols replaced with space
-    string = string.replace('°', ' ')
-    string = string.replace('"', ' ')
-    string = string.replace("'", ' ')
     try:
         parts = [float(part) for part in string.split()]
-        return unit_conversion.LatLongConverter.ToDecDeg(*parts)
+        if parts:
+            return unit_conversion.LatLongConverter.ToDecDeg(*parts)
+        else:
+            raise ValueError()
     except ValueError:
-        raise
+        raise ValueError("%s is not a valid coordinate string" % orig_string)
 
-    raise ValueError("%s is not a valid coordinate string" % orig_string)
+# ######################
+# below is the "old" version -- more complex and less excepting of random junk.
+# still not totally sure which is the better way to go.
+
+# # Some are multiple characters, can't be done with translate
+# replace_list = [('DEG', "°"),
+#                 ('D', "°"),
+#                 ('\N{MASCULINE ORDINAL INDICATOR}', "°"),
+#                 ('N', ""),  # these don't change anything
+#                 ('E', ""),
+#                 ('\N{PRIME}', "'"),  # the "proper" symbol for minutes
+#                 ('\N{DOUBLE PRIME}', '"'),  # the "proper" symbol for seconds
+#                 ]
+
+# def parse(string):
+#     """
+#     Attempts to parse a latitude or longitude string
+
+#     Returns the value in floating point degrees
+
+#     If parsing fails, it raises a ValueError
+
+#     NOTE: This is a naive brute-force approach.
+#           I imagine someone that can make regular expressions dance could do better..
+#     """
+#     orig_string = string
+#     # clean up the string:
+#     string = string.strip().upper()  # uppercase everything, then fewer replace options
+#     for swap in replace_list:
+#         string = string.replace(*swap)
+
+#     # change W and S to a negative value
+#     if 'W' in string:
+#         string = '-' + string.replace('W', '')
+#     if 'S' in string:
+#         string = '-' + string.replace('S', '')
+#     try:  # are we done?
+#         val = float(string)
+#         return val
+#     except ValueError:  # that didn't work, keep going.
+#         pass
+
+#     # not very robust in the face of multiple degree symbols, etc
+#     # but very flexible and easy!
+
+#     # All "legitimate" symbols replaced with space
+#     string = string.replace('°', ' ')
+#     string = string.replace('"', ' ')
+#     string = string.replace("'", ' ')
+#     try:
+#         parts = [float(part) for part in string.split()]
+#         return unit_conversion.LatLongConverter.ToDecDeg(*parts)
+#     except ValueError:
+#         raise
+
+#     raise ValueError("%s is not a valid coordinate string" % orig_string)
 
 
 if __name__ == "__main__":
