@@ -68,22 +68,16 @@ def parse(string):
           I imagine someone that can make regular expressions dance could do better..
     """
 
-    # regex to remove all non-number values
-    patt = re.compile(r"[^0-9.-]")
-
     orig_string = string
 
-    # clean up the string:
-    string = string.strip().upper()  # uppercase everything, then fewer replace options
-
     # change W and S to a negative value
-    if string.endswith('W'):
+    if string.endswith('W') or string.endswith('w'):
         string = '-' + string[:-1]
-    elif string.endswith('S'):
+    elif string.endswith('S') or string.endswith('s'):
         string = '-' + string[:-1]
 
     # get rid of everything that is not numbers
-    string = patt.sub(" ", string).strip()
+    string = re.sub(r"[^0-9.-]", " ", string).strip()
 
     try:
         parts = [float(part) for part in string.split()]
