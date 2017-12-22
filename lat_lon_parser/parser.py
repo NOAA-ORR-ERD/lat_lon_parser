@@ -4,7 +4,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Experimental code for parsing lat-long coordinates in "various" formats
+Code for parsing lat-long coordinates in "various" formats
 
 formats supported:
 
@@ -47,6 +47,20 @@ Degrees, Minutes, Seconds: (really fun!!!)
 
   or -- lots of other combinations!
 
+  Warning: this is not testing for non-compliant strings
+  -- it will let anything pass that follows one of the patterns:
+
+  [-]num<any symbol>[W or E or N or S] :: decimal degrees
+
+  [-]num<any symbol>num<any symbol>[W or E or N or S]:: degrees, decimal minutes
+
+  [-]num <any symbol> num <any symbol> num <any symbol>[W or E or N or S]:: degrees, minutes, decimal seconds
+
+  W or S will return a negative result
+  W,E,N,S are not case-sensitive.
+
+  <any symbol> can be literally anything
+
 """
 from __future__ import unicode_literals, absolute_import, division, print_function
 import unit_conversion  # from: https://github.com/NOAA-ORR-ERD/PyNUCOS
@@ -64,8 +78,8 @@ def parse(string):
 
     If parsing fails, it raises a ValueError
 
-    NOTE: This is a naive brute-force approach.
-          I imagine someone that can make regular expressions dance could do better..
+    NOTE: This is a naive brute-force approach. And it's quite accepting of
+          non-compliant strings. But that may be a good thing
     """
 
     orig_string = string

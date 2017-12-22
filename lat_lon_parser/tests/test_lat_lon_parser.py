@@ -16,7 +16,7 @@ from lat_lon_parser import parse
 
 # note: tripple quotes strings to support both ' and " in the string
 # test code
-test_values = [# decimal degrees
+test_values = [  # decimal degrees
                ('23.43', 23.43),
                ('-45.21', -45.21),
                ('23.43 N', 23.43),
@@ -67,6 +67,10 @@ test_values = [# decimal degrees
 
                ("""23 25 48.0""", 23.43),
                ("""-45 12 36.0""", -45.21),
+
+               # leading zero
+               ("""088° 53’ 23” W""", -88.889722222222),
+               ("""-088° 53’ 23”""", -88.889722222222),
                ]
 
 
