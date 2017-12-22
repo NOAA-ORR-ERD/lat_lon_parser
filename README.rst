@@ -2,13 +2,13 @@
 lat_lon_parser
 ##############
 
-Experimental code for parsing lat-long coordinates in "various" formats
+Code for parsing lat-long coordinates in "various" formats
 
-Note: perhaps it would be better to integarte this with a more full featured lib like:
+Note: perhaps it would be better to integrate this with a more full featured lib like:
 
 https://pypi.python.org/pypi/LatLon23
 
-But that one does not seem to support parsing unknown formats
+But that one does not seem to support parsing unknown formats at this point -- and it's GPL, and perhaps a littel more complex and structured than it needs to be.
 
 Formats supported:
 ==================
@@ -62,7 +62,9 @@ This uses a pretty "stupid" algorithm -- it assumes that all formats will be som
 
 degrees [separator] minutes [separator] seconds [separtor] [N|S|E|W]
 
+But that actually is pretty darn robust!
 
+If you have other formats you want to be able to parse, please contribute tests! -- And ideally a patch if the current code doens't work.
 
 
 
