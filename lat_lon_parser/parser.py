@@ -63,7 +63,9 @@ Degrees, Minutes, Seconds: (really fun!!!)
 
 """
 from __future__ import unicode_literals, absolute_import, division, print_function
-import unit_conversion  # from: https://github.com/NOAA-ORR-ERD/PyNUCOS
+from . import lat_long
+
+# unit_conversion  # from: https://github.com/NOAA-ORR-ERD/PyNUCOS
 
 
 
@@ -82,21 +84,32 @@ def parse(string):
           non-compliant strings. But that may be a good thing
     """
 
+    print("starting with:", string)
     orig_string = string
 
+    string = string.lower()
+    # replace full cardinatl directions:
+    string = string.replace('north', 'n')
+    string = string.replace('south', 's')
+    string = string.replace('east', 'e')
+    string = string.replace('west', 'w')
+
     # change W and S to a negative value
-    if string.endswith('W') or string.endswith('w'):
+    if string.endswith('w'):
         string = '-' + string[:-1]
-    elif string.endswith('S') or string.endswith('s'):
+    elif string.endswith('s'):
         string = '-' + string[:-1]
 
+    print("after sign conversion", string)
     # get rid of everything that is not numbers
     string = re.sub(r"[^0-9.-]", " ", string).strip()
+    print("after stripping non-numbers", string)
 
     try:
         parts = [float(part) for part in string.split()]
+        print("parts", parts)
         if parts:
-            return unit_conversion.LatLongConverter.ToDecDeg(*parts)
+            return lat_long.to_dec_deg(*parts)
         else:
             raise ValueError()
     except ValueError:

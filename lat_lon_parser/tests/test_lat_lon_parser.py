@@ -8,7 +8,10 @@ test_lat_lon_parser
 Tests for `lat_lon_parser` module.
 """
 
-from __future__ import unicode_literals, absolute_import, division, print_function
+from __future__ import (unicode_literals,
+                        absolute_import,
+                        division,
+                        print_function)
 
 import pytest
 
@@ -28,7 +31,7 @@ test_values = [  # decimal degrees
                ('23.43 e', 23.43),
                ('45.21 s', -45.21),
 
-               # degrees, minutes
+               #  degrees, minutes
                ("""23° 25.800'""", 23.43),
                ("""-45° 12.600'""", -45.21),
 
@@ -71,6 +74,12 @@ test_values = [  # decimal degrees
                # leading zero
                ("""088° 53’ 23” W""", -88.889722222222),
                ("""-088° 53’ 23”""", -88.889722222222),
+
+               # more verbose
+               ("""153° 55.85′ West""", -153.930833333333),
+               ("""153° 55.85′ East""", 153.930833333333),
+               ("""15° 55′ 20" north""", 15.922222222222),
+               ("""15d 55m 20s south""", -15.922222222222),
                ]
 
 
