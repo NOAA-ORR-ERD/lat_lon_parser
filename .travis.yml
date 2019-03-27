@@ -3,7 +3,7 @@ python:
   - "2.7"
   - "3.5"
   - "3.6"
-  - "3.7"
+#  - "3.7" # not supported by default yet on travis..
 # no dependencies for this one
 # install:
 #   - pip install -r requirements.txt
