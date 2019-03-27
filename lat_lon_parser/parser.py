@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -59,6 +57,8 @@ Degrees, Minutes, Seconds: (really fun!!!)
   W or S will return a negative result
   W,E,N,S are not case-sensitive.
 
+  "north, south, east, west" also work -- also not case sensitive.
+
   <any symbol> can be literally anything
 
 """
@@ -104,6 +104,10 @@ def parse(string):
     # get rid of everything that is not numbers
     string = re.sub(r"[^0-9.-]", " ", string).strip()
     print("after stripping non-numbers", string)
+
+    # remove space between the minus sign and the value(s)
+    if string.startswith("-"):
+        string = "-" + string.lstrip("- ")
 
     try:
         parts = [float(part) for part in string.split()]
