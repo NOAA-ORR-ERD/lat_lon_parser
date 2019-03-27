@@ -23,6 +23,13 @@ Decimal Degrees with quadrant::
    23.43 N
    45.21 W
 
+Or with spelled out::
+
+   23.43 North
+   45.21 West
+
+(note that all of the cardinal directions are not case-sensitive)
+
 Degrees, decimal minutes: (now it starts getting tricky!)::
 
   23° 25.800'
@@ -36,7 +43,7 @@ or::
 or::
 
   23° 25.8' N
-  45° 12.6' W
+  45° 12.6' West
 
 Degrees, Minutes, Seconds: (really fun!!!)::
 
@@ -50,21 +57,23 @@ or::
 
 or::
 
-  23° 25' 48.0" N
+  23° 25' 48.0" North
   45° 12' 36.0" S
 
 or -- lots of other combinations!
+
+For a more complete list, see the tests
 
 Adding to the options:
 ======================
 
 This uses a pretty "stupid" algorithm -- it assumes that all formats will be something like:
 
-degrees [separator] minutes [separator] seconds [separtor] [N|S|E|W]
+[-][space] degrees [separator] minutes [separator] seconds [separator] [N[orth]|S[outh|E[ast]|W[est]]
 
 But that actually is pretty darn robust!
 
-If you have other formats you want to be able to parse, please contribute tests! -- And ideally a patch if the current code doens't work.
+If you have other formats you want to be able to parse, please contribute tests! -- And ideally a patch if the current code doesn't work.
 
 
 
