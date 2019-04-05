@@ -90,6 +90,12 @@ test_values = [  # decimal degrees
                ("""- 79.123456""", -79.123456),
                ("""   - 79.123456""", -79.123456),
 
+               # minus sign as a separtor:
+               (""" 45-32-12N """, 45.536666666666667),
+               (""" 45d-32'-12" west """, -45.536666666666667),
+               (""" 45d - 32'-12" South """, -45.536666666666667),
+               (""" -45d-32'-12" """, -45.536666666666667),
+               ("""- 45-32-12""", -45.536666666666667),
                ]
 
 
@@ -104,8 +110,9 @@ invalid_values = ["some_crap",
                   # "23.43t", # this is now OK -- the t will get tossed out.
                   "23.4 14.2",  # decimal in more than one field
                   """23.2d 14' 12.22" """,  # decimal in more than one field
-                  """3° -25' 48.0" N""",  # negative in the middle
-                  """3° 25' -48.0" N""",  # negative in the middle
+                  # not invalid -- could use - as a separator
+                  # """3° -25' 48.0" N""",  # negative in the middle
+                  # """3° 25' -48.0" N""",  # negative in the middle
                   #
                   "92 92",  # too large a minute value
                   """3° 25' 61.0" N""",  # too large a second value

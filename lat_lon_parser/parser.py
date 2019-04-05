@@ -87,7 +87,7 @@ def parse(string):
     print("starting with:", string)
     orig_string = string
 
-    string = string.lower()
+    string = string.strip().lower()
     # replace full cardinatl directions:
     string = string.replace('north', 'n')
     string = string.replace('south', 's')
@@ -95,25 +95,23 @@ def parse(string):
     string = string.replace('west', 'w')
 
     # change W and S to a negative value
-    if string.endswith('w'):
-        string = '-' + string[:-1]
-    elif string.endswith('s'):
-        string = '-' + string[:-1]
+    if string.endswith('w') or string.endswith('s'):
+        negative = -1
+    else:
+        negative = 1
+    negative = -1 if string.startswith("-") else negative
+    string = string.lstrip("- ")
 
-    print("after sign conversion", string)
+    # print("after sign stripping", string, negative)
     # get rid of everything that is not numbers
-    string = re.sub(r"[^0-9.-]", " ", string).strip()
-    print("after stripping non-numbers", string)
-
-    # remove space between the minus sign and the value(s)
-    if string.startswith("-"):
-        string = "-" + string.lstrip("- ")
+    string = re.sub(r"[^0-9.]", " ", string).strip()
+    # print("after stripping non-numbers", string)
 
     try:
         parts = [float(part) for part in string.split()]
-        print("parts", parts)
+        # print("parts", parts)
         if parts:
-            return lat_long.to_dec_deg(*parts)
+            return negative * lat_long.to_dec_deg(*parts)
         else:
             raise ValueError()
     except ValueError:
