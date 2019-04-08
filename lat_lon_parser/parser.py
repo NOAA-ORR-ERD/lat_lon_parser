@@ -84,7 +84,7 @@ def parse(string):
           non-compliant strings. But that may be a good thing
     """
 
-    print("starting with:", string)
+    # print("starting with:", string)
     orig_string = string
 
     string = string.strip().lower()
