@@ -37,7 +37,7 @@ setup(
     long_description=readme,
     author="Christopher Barker",
     author_email='Chris.Barker@noaa.gov',
-    url='https://github.com/ChrisBarker-NOAA/lat_lon_parser',
+    url='https://github.com/NOAA-ORR-ERD/lat_lon_parser',
     packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
