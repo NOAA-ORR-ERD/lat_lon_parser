@@ -33,7 +33,7 @@ test_requirements = [
 setup(
     name='lat_lon_parser',
     version=get_version(),
-    description="simple parser for latitude-longitude strings",
+    description="Simple parser for latitude-longitude strings",
     long_description=readme,
     author="Christopher Barker",
     author_email='Chris.Barker@noaa.gov',
@@ -44,13 +44,13 @@ setup(
     zip_safe=False,
     keywords='lat_lon_parser',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
+        'License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
     ],
     test_suite='tests',
     tests_require=test_requirements
 )
-
