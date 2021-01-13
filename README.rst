@@ -2,7 +2,7 @@
 lat_lon_parser
 ##############
 
-Code for parsing lat-long coordinates in "various" formats
+Code for parsing lat-long coordinates in "various" formats, and for converting between lat-long formats (e.g. decimal degrees to degrees-minutes-seconds)
 
 Note: perhaps it would be better to integrate this with a more full featured lib like:
 
@@ -88,6 +88,17 @@ This uses a pretty "stupid" algorithm -- it assumes that all formats will be som
 But that actually is pretty darn robust!
 
 If you have other formats you want to be able to parse, please contribute tests! -- And ideally a patch if the current code doesn't work.
+
+Conversion to Latitude Longitude Formats
+========================================
+
+Also included is code to convert to other formats used for latitude and longitude:
+
+- degrees minutes
+- degrees minutes seconds
+
+
+
 
 
 
