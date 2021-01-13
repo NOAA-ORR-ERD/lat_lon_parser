@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals, absolute_import, division, print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import os
 
@@ -15,20 +18,13 @@ def get_version():
             if line.strip().startswith("__version__"):
                 version = line.split('=')[1].strip().strip("'")
                 return version
-    raise ValueError("__version__ isnot specified in __init__.py")
+    raise ValueError("__version__ is not specified in __init__.py")
 
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
-#    readme = readme_file.read().decode('utf-8')
 
-requirements = [
-    # TODO: put package requirements here
-]
-
-test_requirements = [
-    # TODO: put package test requirements here
-]
+test_requirements = ['pytest']
 
 setup(
     name='lat_lon_parser',
@@ -40,7 +36,6 @@ setup(
     url='https://github.com/NOAA-ORR-ERD/lat_lon_parser',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=requirements,
     zip_safe=False,
     keywords='lat_lon_parser',
     classifiers=[

@@ -80,6 +80,12 @@ def parse(string):
 
     If parsing fails, it raises a ValueError
 
+    :param string: The string to parse
+    "type string": str
+
+    :returns: A float value representing degrees.
+              negative for southern or western hemisphere or
+
     NOTE: This is a naive brute-force approach. And it's quite accepting of
           non-compliant strings. But that may be a good thing
     """

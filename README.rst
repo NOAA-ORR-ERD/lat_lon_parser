@@ -8,7 +8,21 @@ Note: perhaps it would be better to integrate this with a more full featured lib
 
 https://pypi.python.org/pypi/LatLon23
 
-But that one does not seem to support parsing unknown formats at this point -- and it's GPL, and perhaps a littel more complex and structured than it needs to be.
+But that one does not seem to support parsing unknown formats at this point -- and it's GPL, and perhaps a little more complex and structured than it needs to be.
+
+
+Usage:
+======
+
+from lat_lon_parser import parse
+
+.. code-block::
+
+    In [12]: from lat_lon_parser import parse
+
+    In [13]: parse("45° 12.6' W")
+    Out[13]: -45.21
+
 
 Formats supported:
 ==================
