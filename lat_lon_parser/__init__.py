@@ -8,5 +8,9 @@ __version__ = '1.1.4'
 
 from .parser import parse
 from .lat_long import to_dec_deg, to_deg_min, to_deg_min_sec
+from .lat_long import to_str_dec_deg, to_str_deg_min, to_str_deg_min_sec, to_str
 
-
+__all__ = [
+    "parse", "to_dec_deg", "to_deg_min", "to_deg_min_sec", "to_str_dec_deg",
+    "to_str_deg_min", "to_str_deg_min_sec", "to_str"
+]
