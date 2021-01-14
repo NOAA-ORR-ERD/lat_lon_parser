@@ -12,63 +12,6 @@ from __future__ import (unicode_literals,
                         print_function)
 
 import math
-import struct
-
-# These specialized float functions (and others)
-# are to distinguish between -0 and 0.
-#
-# Needed to avoid results like: 20degrees, 60 minutes
-# and to properly format negative values less than one degree:
-
-
-def signbit(value):
-    """
-    Test whether the sign bit of the given floating-point value is
-    set.  If it is set, this generally means the given value is
-    negative.  However, this is not the same as comparing the value
-    to C{0.0}.  For example:
-
-    >>> NEGATIVE_ZERO < 0.0
-    False
-
-    since negative zero is numerically equal to positive zero.  But
-    the sign bit of negative zero is indeed set:
-
-    >>> signbit(NEGATIVE_ZERO)
-    True
-    >>> signbit(0.0)
-    False
-
-    @type  value: float
-    @param value: a Python (double-precision) float value
-
-    @rtype:  bool
-    @return: C{True} if the sign bit of C{value} is set;
-             C{False} if it is not set.
-
-    signbit and doubleToRawLongBits
-    are from Martin Jansche:
-
-    http://symptotic.com/mj/code.html  (MIT license).
-
-    This is required to capture the difference between -0.0 and 0.0, which is
-    useful if someone wants to convert a latitude or longitude like:
-    -0.0degrees, 34minutes to  0d34'00"S
-
-    """
-    return (doubleToRawLongBits(value) >> 63) == 1
-
-
-def doubleToRawLongBits(value):
-    """
-    :param value: a Python (double-precision) float value
-
-    :return: the IEEE 754 bit representation (64 bits as a long integer)
-               of the given double-precision floating-point value.
-    """
-    # pack double into 64 bits, then unpack as long int
-    return struct.unpack(b'Q', struct.pack(b'd', value))[0]
-
 
 def to_dec_deg(d=0, m=0, s=0, max=180):
     """
@@ -77,34 +20,21 @@ def to_dec_deg(d=0, m=0, s=0, max=180):
     converts degrees, minutes, seconds to decimal degrees
     (returned as a float).
     """
-    if m < 0 or s < 0:
-        raise ValueError("Minutes and Seconds have to be positive")
-
-    if m > 60.0 or s > 60.0:
-        raise ValueError("Minutes and Seconds have to be between "
-                         "-180 and 180")
+    if not (0 <= m <= 60 and 0 <= s <= 60):
+        raise ValueError("Minutes and seconds have to be between 0 and 60")
 
     if abs(d) > max:
         raise ValueError("Degrees have to be between -180 and 180")
 
-    if signbit(d):
-        Sign = -1
-        d = abs(d)
-    else:
-        Sign = 1
-
-    deg_has_fract = bool(math.modf(d)[0])
-    min_has_fract = bool(math.modf(m)[0])
-
-    if deg_has_fract and (m != 0.0 or s != 0.0):
+    if d != int(d) and (m != 0 or s != 0):
         raise ValueError("degrees cannot have fraction unless both minutes"
                          "and seconds are zero")
 
-    if min_has_fract and s != 0.0:
+    if m != int(m) and s != 0:
         raise ValueError("minutes cannot have fraction unless seconds "
                          "are zero")
 
-    return Sign * (d + m / 60.0 + s / 3600.0)
+    return math.copysign(abs(d) + m / 60 + s / 3600, d)
 
 
 def to_deg_min(DecDegrees):
@@ -112,19 +42,10 @@ def to_deg_min(DecDegrees):
     Converts from decimal (binary float) degrees to:
       Degrees, Minutes
     """
-    if signbit(DecDegrees):
-        Sign = -1
-        DecDegrees = abs(DecDegrees)
-    else:
-        Sign = 1
-
-    Degrees = int(DecDegrees)
-
-    # add a tiny bit then round to avoid binary rounding issues
-    DecMinutes = round((DecDegrees - Degrees + 1e-14) * 60, 10)
+    degrees, remainder = divmod(abs(DecDegrees), 1)
 
     # float to preserve -0.0
-    return (Sign * float(Degrees), DecMinutes)
+    return math.copysign(degrees, DecDegrees), remainder * 60
 
 
 def to_deg_min_sec(DecDegrees):
@@ -132,21 +53,11 @@ def to_deg_min_sec(DecDegrees):
     Converts from decimal (binary float) degrees to:
       Degrees, Minutes, Seconds
     """
-    if signbit(DecDegrees):
-        Sign = -1
-        DecDegrees = abs(DecDegrees)
-    else:
-        Sign = 1
+    degrees, remainder = divmod(round(abs(DecDegrees), 9), 1)
+    minutes, remainder = divmod(round(remainder * 60, 9), 1)
 
-    Degrees = int(DecDegrees)
-
-    # add a tiny bit to avoid rounding issues
-    DecMinutes = (DecDegrees - Degrees + 1e-14) * 60
-
-    Minutes = int(DecMinutes)
-    Seconds = round(((DecMinutes - Minutes) * 60), 10)
-
-    return (Sign * float(Degrees), Minutes, Seconds)
+    # float to preserve -0.0
+    return math.copysign(degrees, DecDegrees), minutes, remainder * 60
 
 
 def to_str_dec_deg(d=0, m=0, s=0):
@@ -161,8 +72,6 @@ def to_str_deg_min(DecDegrees):
 
 def to_str_deg_min_sec(DecDegrees):
     (deg, min, sec) = to_deg_min_sec(DecDegrees)
-    # s = "%i\xb0 %i' %.2f\"" % (Degrees, Minutes, Seconds)
-    # return "-" + s if Sign else s
     return to_str(deg, min, sec)
 
 
@@ -174,15 +83,10 @@ def to_str(deg, min=None, sec=None):
     :param min=None: minutes value
     :param sec=None: seconds value
     """
-    sign, deg = ((True, abs(deg))
-                 if signbit(deg)
-                 else (False, deg))
-
     if min is None and sec is None:
-        s = "%.6f\xb0" % (deg)
+        s = "{:.6f}\xb0".format(deg)
     elif sec is None:
-        s = "%i\xb0 %.3f'" % (deg, min)
+        s = "{:.0f}\xb0 {:.3f}'".format(deg, min)
     else:
-        s = "%i\xb0 %i' %.2f\"" % (deg, min, sec)
-
-    return "-" + s if sign else s
+        s = "{:.0f}\xb0 {:.0f}' {:.2f}\"".format(deg, min, sec)
+    return s
