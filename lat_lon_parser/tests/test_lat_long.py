@@ -14,27 +14,6 @@ from lat_lon_parser import lat_long
 import pytest
 
 
-class Test_SignBit():
-
-    def test_Neg(self):
-        assert lat_long.signbit(-5.0) is True
-
-    def test_NegZero(self):
-        assert lat_long.signbit(-0.0) is True
-
-    def test_IntegerNeg(self):
-        assert lat_long.signbit(-5) is True
-
-    def test_Pos(self):
-        assert lat_long.signbit(5.0) is False
-
-    def test_PosZero(self):
-        assert lat_long.signbit(0.0) is False
-
-    def test_IntegerPos(self):
-        assert lat_long.signbit(5) is False
-
-
 class Test_LatLongErrors():
 
     def test_NegativeMinutes(self):
