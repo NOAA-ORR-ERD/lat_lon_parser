@@ -14,7 +14,6 @@ from setuptools import setup, find_packages
 def get_version():
     with open(os.path.join("lat_lon_parser", "__init__.py")) as initfile:
         for line in initfile:
-            # __version__ = '1.0.0'
             if line.strip().startswith("__version__"):
                 version = line.split('=')[1].strip().strip("'")
                 return version
@@ -35,7 +34,6 @@ setup(
     author_email='Chris.Barker@noaa.gov',
     url='https://github.com/NOAA-ORR-ERD/lat_lon_parser',
     packages=find_packages(),
-    include_package_data=True,
     zip_safe=False,
     keywords='lat_lon_parser',
     classifiers=[

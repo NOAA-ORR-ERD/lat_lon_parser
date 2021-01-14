@@ -1,3 +1,18 @@
+.. image:: https://github.com/NOAA-ORR-ERD/lat_lon_parser/workflows/CI/badge.svg
+  :target: https://github.com/NOAA-ORR-ERD/lat_lon_parser/actions?query=workflow%3ACI
+
+.. image:: https://img.shields.io/pypi/v/lat-lon-parser.svg
+  :target: https://pypi.org/project/lat-lon-parser/
+
+.. image:: https://img.shields.io/pypi/pyversions/lat-lon-parser.svg
+  :target: https://pypi.org/project/lat-lon-parser/
+
+.. image:: https://img.shields.io/github/license/NOAA-ORR-ERD/lat_lon_parser
+  :target: https://github.com/NOAA-ORR-ERD/lat_lon_parser/
+
+
+
+
 ##############
 lat_lon_parser
 ##############
