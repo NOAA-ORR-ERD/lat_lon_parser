@@ -13,6 +13,7 @@ from lat_lon_parser import lat_long
 
 import pytest
 
+
 class Test_SignBit():
 
     def test_Neg(self):

@@ -186,5 +186,3 @@ def to_str(deg, min=None, sec=None):
         s = "%i\xb0 %i' %.2f\"" % (deg, min, sec)
 
     return "-" + s if sign else s
-
-

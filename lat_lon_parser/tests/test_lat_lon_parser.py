@@ -118,8 +118,8 @@ invalid_values = ["some_crap",
                   """3° 25' 61.0" N""",  # too large a second value
                   ]
 
+
 @pytest.mark.parametrize("string", invalid_values)
 def test_parse_invalid(string):
     with pytest.raises(ValueError):
         parse(string)
-
