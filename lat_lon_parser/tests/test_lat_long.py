@@ -93,42 +93,42 @@ class Test_LatLong:
 
     def test_DDString(self):
         d, m, s = 120, 30, 5
-        assert lat_long.to_str_dec_deg(d, m, s, ustring=True) == "120.501389\xb0"
+        assert lat_long.to_str_dec_deg(d, m, s) == "120.501389\xb0"
 
     def test_DDString2(self):
         d, m, s = -50, 30, 5
-        assert lat_long.to_str_dec_deg(d, m, s, ustring=True) == "-50.501389\xb0"
+        assert lat_long.to_str_dec_deg(d, m, s) == "-50.501389\xb0"
 
     def test_DDString3(self):
         d, m, s = 0, 30, 0
-        assert lat_long.to_str_dec_deg(d, m, s, ustring=True) == "0.500000\xb0"
+        assert lat_long.to_str_dec_deg(d, m, s) == "0.500000\xb0"
 
     def test_DMString(self):
         d, m = 120, 45.5
         DecDeg = lat_long.to_dec_deg(d, m)
-        assert lat_long.to_str_deg_min(DecDeg, True) == "120\xb0 45.500'"
+        assert lat_long.to_str_deg_min(DecDeg) == "120\xb0 45.500'"
 
     def test_DMString2(self):
         d, m = -120, 3
         DecDeg = lat_long.to_dec_deg(d, m)
-        assert lat_long.to_str_deg_min(DecDeg, True) == "-120\xb0 3.000'"
+        assert lat_long.to_str_deg_min(DecDeg) == "-120\xb0 3.000'"
 
     def test_DMSString(self):
         d, m, s = 120, 45, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        assert lat_long.to_str_deg_min_sec(DecDeg, True) == "120\xb0 45' 15.00\""
+        assert lat_long.to_str_deg_min_sec(DecDeg) == "120\xb0 45' 15.00\""
 
     def test_DMSString2(self):
         d, m, s = -120, 3, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        assert lat_long.to_str_deg_min_sec(DecDeg, True) == "-120\xb0 3' 15.00\""
+        assert lat_long.to_str_deg_min_sec(DecDeg) == "-120\xb0 3' 15.00\""
 
     def test_DMtringZero(self):
         d, m, s = -0.0, 3, 0
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        assert lat_long.to_str_deg_min(DecDeg, True) == """-0\xb0 3.000'"""
+        assert lat_long.to_str_deg_min(DecDeg) == """-0\xb0 3.000'"""
 
     def test_DMSStringZero(self):
         d, m, s = -0.0, 3, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        assert lat_long.to_str_deg_min_sec(DecDeg, True) == '''-0\xb0 3' 15.00"'''
+        assert lat_long.to_str_deg_min_sec(DecDeg) == '''-0\xb0 3' 15.00"'''
