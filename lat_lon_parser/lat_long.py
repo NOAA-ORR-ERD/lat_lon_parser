@@ -14,9 +14,11 @@ from __future__ import (unicode_literals,
 import math
 import struct
 
-# These specialzed float functions (and others)
+# These specialized float functions (and others)
 # are to distinguish between -0 and 0.
+#
 # Needed to avoid results like: 20degrees, 60 minutes
+# and to properly format negative values less than one degree:
 
 
 def signbit(value):
@@ -59,18 +61,16 @@ def signbit(value):
 
 def doubleToRawLongBits(value):
     """
-    @type  value: float
-    @param value: a Python (double-precision) float value
+    :param value: a Python (double-precision) float value
 
-    @rtype: long
-    @return: the IEEE 754 bit representation (64 bits as a long integer)
-             of the given double-precision floating-point value.
+    :return: the IEEE 754 bit representation (64 bits as a long integer)
+               of the given double-precision floating-point value.
     """
     # pack double into 64 bits, then unpack as long int
     return struct.unpack(b'Q', struct.pack(b'd', value))[0]
 
 
-def to_dec_deg(d=0, m=0, s=0, ustring=False, max=180):
+def to_dec_deg(d=0, m=0, s=0, max=180):
     """
     DecDegrees = to_dec_deg(d=0, m=0, s=0)
 
@@ -104,22 +104,13 @@ def to_dec_deg(d=0, m=0, s=0, ustring=False, max=180):
         raise ValueError("minutes cannot have fraction unless seconds "
                          "are zero")
 
-    DecDegrees = Sign * (d + m / 60.0 + s / 3600.0)
-
-    if ustring:
-        return u"%.6f\xb0" % (DecDegrees)
-    else:
-        return DecDegrees
+    return Sign * (d + m / 60.0 + s / 3600.0)
 
 
-def to_deg_min(DecDegrees, ustring=False):
+def to_deg_min(DecDegrees):
     """
     Converts from decimal (binary float) degrees to:
       Degrees, Minutes
-
-    If the optional parameter: "ustring" is True,
-    a Unicode string is returned
-
     """
     if signbit(DecDegrees):
         Sign = -1
@@ -132,24 +123,14 @@ def to_deg_min(DecDegrees, ustring=False):
     # add a tiny bit then round to avoid binary rounding issues
     DecMinutes = round((DecDegrees - Degrees + 1e-14) * 60, 10)
 
-    if ustring:
-        if Sign == 1:
-            return u"%i\xb0 %.3f'" % (Degrees, DecMinutes)
-        else:
-            return u"-%i\xb0 %.3f'" % (Degrees, DecMinutes)
-    else:
-        # float to preserve -0.0
-        return (Sign * float(Degrees), DecMinutes)
+    # float to preserve -0.0
+    return (Sign * float(Degrees), DecMinutes)
 
 
-def to_deg_min_sec(DecDegrees, ustring=False):
+def to_deg_min_sec(DecDegrees):
     """
     Converts from decimal (binary float) degrees to:
       Degrees, Minutes, Seconds
-
-    If the optional parameter: "ustring" is True,
-    a unicode string is returned
-
     """
     if signbit(DecDegrees):
         Sign = -1
@@ -165,10 +146,43 @@ def to_deg_min_sec(DecDegrees, ustring=False):
     Minutes = int(DecMinutes)
     Seconds = round(((DecMinutes - Minutes) * 60), 10)
 
-    if ustring:
-        if Sign == 1:
-            return u"%i\xb0 %i' %.2f\"" % (Degrees, Minutes, Seconds)
-        else:
-            return u"-%i\xb0 %i' %.2f\"" % (Degrees, Minutes, Seconds)
+    return (Sign * float(Degrees), Minutes, Seconds)
+
+
+def to_str_dec_deg(d=0, m=0, s=0):
+    Degrees = to_dec_deg(d, m, s)
+    return to_str(Degrees)
+
+
+def to_str_deg_min(DecDegrees):
+    (Degrees, Minutes) = to_deg_min(DecDegrees)
+    return to_str(Degrees, Minutes)
+
+
+def to_str_deg_min_sec(DecDegrees):
+    (deg, min, sec) = to_deg_min_sec(DecDegrees)
+    # s = "%i\xb0 %i' %.2f\"" % (Degrees, Minutes, Seconds)
+    # return "-" + s if Sign else s
+    return to_str(deg, min, sec)
+
+
+def to_str(deg, min=None, sec=None):
+    """
+    Convert to string form
+
+    :param deg: degrees value
+    :param min=None: minutes value
+    :param sec=None: seconds value
+    """
+    sign, deg = ((True, abs(deg))
+                 if signbit(deg)
+                 else (False, deg))
+
+    if min is None and sec is None:
+        s = "%.6f\xb0" % (deg)
+    elif sec is None:
+        s = "%i\xb0 %.3f'" % (deg, min)
     else:
-        return (Sign * float(Degrees), Minutes, Seconds)
+        s = "%i\xb0 %i' %.2f\"" % (deg, min, sec)
+
+    return "-" + s if sign else s

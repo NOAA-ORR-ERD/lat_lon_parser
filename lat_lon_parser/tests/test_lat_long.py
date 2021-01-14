@@ -1,130 +1,135 @@
 """
 tests for lat_long.py
 
-This can be tricky to make sure the FP issues are addressed
-
-fixme -- convert to pur pytest some day...
+This can be tricky to make sure the FP issues are addressed correctly
 """
-import unittest
+
+from __future__ import (unicode_literals,
+                        absolute_import,
+                        division,
+                        print_function)
+
 from lat_lon_parser import lat_long
 
-
-class testSignBit():
-
-    def testNeg(self):
-        lat_long.signbit(-5.0) is True
-
-    def testNegZero(self):
-        lat_long.signbit(-0.0) is True
-
-    def testIntegerNeg(self):
-        lat_long.signbit(-5) is True
-
-    def testPos(self):
-        lat_long.signbit(5.0) is False
-
-    def testPosZero(self):
-        lat_long.signbit(0.0) is False
-
-    def testIntegerPos(self):
-        lat_long.signbit(5) is False
+import pytest
 
 
-class testLatLongErrors():
+class Test_SignBit():
 
-    def testNegativeMinutes(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, 30, -30)
+    def test_Neg(self):
+        assert lat_long.signbit(-5.0) is True
 
-    def testNegativeSeconds(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, 30, 30, -1)
+    def test_NegZero(self):
+        assert lat_long.signbit(-0.0) is True
 
-    def testTooBig(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, d=200)
+    def test_IntegerNeg(self):
+        assert lat_long.signbit(-5) is True
 
-    def testTooNegative(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, d=-181)
+    def test_Pos(self):
+        assert lat_long.signbit(5.0) is False
 
-    def testTooBigMin(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, d=20, m=61)
+    def test_PosZero(self):
+        assert lat_long.signbit(0.0) is False
 
-    def testTooBigSec(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, d=30, m=42, s=61)
-
-    def testDegFractAndMin(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, d=30.2, m=5, s=0)
-
-    def testDegFractAndSec(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, d=30.2, m=0, s=6.3)
-
-    def testMinFractAndSec(self):
-        self.assertRaises(ValueError, lat_long.to_dec_deg, d=30, m=4.5, s=6)
+    def test_IntegerPos(self):
+        assert lat_long.signbit(5) is False
 
 
-class testLatLong(unittest.TestCase):
+class Test_LatLongErrors():
 
-    def testDecDegrees(self):
-        self.assertEqual(lat_long.to_dec_deg(30, 30), 30.5)
+    def test_NegativeMinutes(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(30, -30)
 
-    def testDecDegrees2(self):
-        self.assertAlmostEqual(lat_long.to_dec_deg(30, 30, 30), 30.50833333333)
+    def test_NegativeSeconds(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(30, 30, -1)
 
-    def testDegMin(self):
-        self.assertEqual(lat_long.to_deg_min(30.5)[0], 30)
-        self.assertEqual(lat_long.to_deg_min(30.5)[1], 30.0)
+    def test_TooBig(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=200)
 
-    def testMinusZeroDeg(self):
-        self.assertEqual(lat_long.to_dec_deg(d=-0.0, m=20, s=20), -0.33888888888888885)
+    def test_TooNegative(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=-181)
 
-    def testBinaryProblem(self):
-        self.assertEqual(lat_long.to_deg_min_sec(45.05), (45, 3, 0.0))
+    def test_TooBigMin(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=20, m=61)
 
-    def testDDString(self):
+    def test_TooBigSec(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=30, m=42, s=61)
+
+    def test_DegFractAndMin(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=30.2, m=5, s=0)
+
+    def test_DegFractAndSec(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=30.2, m=0, s=6.3)
+
+    def test_MinFractAndSec(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=30, m=4.5, s=6)
+
+
+class Test_LatLong:
+
+    def test_DecDegrees(self):
+        assert lat_long.to_dec_deg(30, 30) == 30.5
+
+    def test_DecDegrees2(self):
+        assert lat_long.to_dec_deg(30, 30, 30) == 30.508333333333333
+
+    def test_DegMin(self):
+        assert lat_long.to_deg_min(30.5)[0] == 30
+        assert lat_long.to_deg_min(30.5)[1] == 30.0
+
+    def test_MinusZeroDeg(self):
+        assert lat_long.to_dec_deg(d=-0.0, m=20, s=20 == -0.33888888888888885)
+
+    def test_BinaryProblem(self):
+        assert lat_long.to_deg_min_sec(45.05) == (45, 3, 0.0)
+
+    def test_DDString(self):
         d, m, s = 120, 30, 5
-        self.assertEqual(lat_long.to_dec_deg(d, m, s, ustring=True),
-                         u"120.501389\xb0")
+        assert lat_long.to_str_dec_deg(d, m, s) == "120.501389\xb0"
 
-    def testDDString2(self):
+    def test_DDString2(self):
         d, m, s = -50, 30, 5
-        self.assertEqual(lat_long.to_dec_deg(d, m, s, ustring=True),
-                         u"-50.501389\xb0")
+        assert lat_long.to_str_dec_deg(d, m, s) == "-50.501389\xb0"
 
-    def testDDString3(self):
+    def test_DDString3(self):
         d, m, s = 0, 30, 0
-        self.assertEqual(lat_long.to_dec_deg(d, m, s, ustring=True),
-                         u"0.500000\xb0")
+        assert lat_long.to_str_dec_deg(d, m, s) == "0.500000\xb0"
 
-    def testDMString(self):
+    def test_DMString(self):
         d, m = 120, 45.5
         DecDeg = lat_long.to_dec_deg(d, m)
-        self.assertEqual(lat_long.to_deg_min(DecDeg, True),
-                         u"120\xb0 45.500'")
+        assert lat_long.to_str_deg_min(DecDeg) == "120\xb0 45.500'"
 
-    def testDMString2(self):
+    def test_DMString2(self):
         d, m = -120, 3
         DecDeg = lat_long.to_dec_deg(d, m)
-        self.assertEqual(lat_long.to_deg_min(DecDeg, True),
-                         u"-120\xb0 3.000'")
+        assert lat_long.to_str_deg_min(DecDeg) == "-120\xb0 3.000'"
 
-    def testDMSString(self):
+    def test_DMSString(self):
         d, m, s = 120, 45, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        self.assertEqual(lat_long.to_deg_min_sec(DecDeg, True),
-                         u"120\xb0 45' 15.00\"")
+        assert lat_long.to_str_deg_min_sec(DecDeg) == "120\xb0 45' 15.00\""
 
-    def testDMSString2(self):
+    def test_DMSString2(self):
         d, m, s = -120, 3, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        self.assertEqual(lat_long.to_deg_min_sec(DecDeg, True),
-                         u"-120\xb0 3' 15.00\"")
+        assert lat_long.to_str_deg_min_sec(DecDeg) == "-120\xb0 3' 15.00\""
 
-    def testDMtringZero(self):
+    def test_DMtringZero(self):
         d, m, s = -0.0, 3, 0
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        self.assertEqual(lat_long.to_deg_min(DecDeg, True),
-                         u"""-0\xb0 3.000'""")
+        assert lat_long.to_str_deg_min(DecDeg) == """-0\xb0 3.000'"""
 
-    def testDMSStringZero(self):
+    def test_DMSStringZero(self):
         d, m, s = -0.0, 3, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        self.assertEqual(lat_long.to_deg_min_sec(DecDeg, True),
-                         u'''-0\xb0 3' 15.00"''')
+        assert lat_long.to_str_deg_min_sec(DecDeg) == '''-0\xb0 3' 15.00"'''

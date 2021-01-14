@@ -48,11 +48,12 @@ Degrees, Minutes, Seconds: (really fun!!!)
   Warning: this is not testing for non-compliant strings
   -- it will let anything pass that follows one of the patterns:
 
-  [-]num<any symbol>[W or E or N or S] :: decimal degrees
+  - num<any symbol>[W or E or N or S] :: decimal degrees
 
-  [-]num<any symbol>num<any symbol>[W or E or N or S]:: degrees, decimal minutes
+  - num<any symbol>num<any symbol>[W or E or N or S]:: degrees, decimal minutes
 
-  [-]num <any symbol> num <any symbol> num <any symbol>[W or E or N or S]:: degrees, minutes, decimal seconds
+  - num <any symbol> num <any symbol> num <any symbol>[W or E or N or S]::
+    degrees, minutes, decimal seconds
 
   W or S will return a negative result
   W,E,N,S are not case-sensitive.
@@ -62,15 +63,14 @@ Degrees, Minutes, Seconds: (really fun!!!)
   <any symbol> can be literally anything
 
 """
-from __future__ import unicode_literals, absolute_import, division, print_function
+from __future__ import (unicode_literals,
+                        absolute_import,
+                        division,
+                        print_function)
 from . import lat_long
 
-# unit_conversion  # from: https://github.com/NOAA-ORR-ERD/PyNUCOS
-
-
-
-# new test version -- much simpler
 import re
+
 
 def parse(string):
     """
@@ -79,6 +79,12 @@ def parse(string):
     Returns the value in floating point degrees
 
     If parsing fails, it raises a ValueError
+
+    :param string: The string to parse
+    "type string": str
+
+    :returns: A float value representing degrees.
+              negative for southern or western hemisphere or
 
     NOTE: This is a naive brute-force approach. And it's quite accepting of
           non-compliant strings. But that may be a good thing
@@ -116,71 +122,3 @@ def parse(string):
             raise ValueError()
     except ValueError:
         raise ValueError("%s is not a valid coordinate string" % orig_string)
-
-# ######################
-# below is the "old" version -- more complex and less excepting of random junk.
-# still not totally sure which is the better way to go.
-
-# # Some are multiple characters, can't be done with translate
-# replace_list = [('DEG', "°"),
-#                 ('D', "°"),
-#                 ('\N{MASCULINE ORDINAL INDICATOR}', "°"),
-#                 ('N', ""),  # these don't change anything
-#                 ('E', ""),
-#                 ('\N{PRIME}', "'"),  # the "proper" symbol for minutes
-#                 ('\N{DOUBLE PRIME}', '"'),  # the "proper" symbol for seconds
-#                 ]
-
-# def parse(string):
-#     """
-#     Attempts to parse a latitude or longitude string
-
-#     Returns the value in floating point degrees
-
-#     If parsing fails, it raises a ValueError
-
-#     NOTE: This is a naive brute-force approach.
-#           I imagine someone that can make regular expressions dance could do better..
-#     """
-#     orig_string = string
-#     # clean up the string:
-#     string = string.strip().upper()  # uppercase everything, then fewer replace options
-#     for swap in replace_list:
-#         string = string.replace(*swap)
-
-#     # change W and S to a negative value
-#     if 'W' in string:
-#         string = '-' + string.replace('W', '')
-#     if 'S' in string:
-#         string = '-' + string.replace('S', '')
-#     try:  # are we done?
-#         val = float(string)
-#         return val
-#     except ValueError:  # that didn't work, keep going.
-#         pass
-
-#     # not very robust in the face of multiple degree symbols, etc
-#     # but very flexible and easy!
-
-#     # All "legitimate" symbols replaced with space
-#     string = string.replace('°', ' ')
-#     string = string.replace('"', ' ')
-#     string = string.replace("'", ' ')
-#     try:
-#         parts = [float(part) for part in string.split()]
-#         return unit_conversion.LatLongConverter.ToDecDeg(*parts)
-#     except ValueError:
-#         raise
-
-#     raise ValueError("%s is not a valid coordinate string" % orig_string)
-
-
-if __name__ == "__main__":
-    # print out all the forms that work
-    print("All these forms work:")
-    for string, val in test_values:
-        print(string)
-    print("And these don't:")
-    for string in invalid_values:
-        print(string)
-
