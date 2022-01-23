@@ -110,8 +110,9 @@ def parse(string):
     negative = -1 if string.startswith('-') else negative
 
     try:
-        parts = [float(part.replace(',', '.')) for part in re.findall(r'[\d.,]+', string)]  # noqa: E501
-        if parts:
+#        parts = [float(part.replace(',', '.')) for part in re.findall(r'[\d.,]+', string)]  # noqa: E501
+        parts = [float(part.replace(',', '.')) for part in re.findall(r'\d+(?:[.,]\d+)?', string)]  # noqa: E501
+    if parts:
             return math.copysign(lat_long.to_dec_deg(*parts), negative)
         else:
             raise ValueError()
