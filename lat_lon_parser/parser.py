@@ -112,7 +112,7 @@ def parse(string):
     try:
 #        parts = [float(part.replace(',', '.')) for part in re.findall(r'[\d.,]+', string)]  # noqa: E501
         parts = [float(part.replace(',', '.')) for part in re.findall(r'\d+(?:[.,]\d+)?', string)]  # noqa: E501
-    if parts:
+        if parts:
             return math.copysign(lat_long.to_dec_deg(*parts), negative)
         else:
             raise ValueError()
