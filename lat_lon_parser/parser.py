@@ -99,13 +99,18 @@ def parse(string):
     string = string.replace('south', 's')
     string = string.replace('east', 'e')
     string = string.replace('west', 'w')
+    # replace cyrillic cardinal directions:
+    string = string.replace('с', 'n')
+    string = string.replace('ю', 's')
+    string = string.replace('в', 'e')
+    string = string.replace('з', 'w')
 
     # change W and S to a negative value
     negative = -1 if string.endswith(('w', 's')) else 1
     negative = -1 if string.startswith('-') else negative
 
     try:
-        parts = [float(part) for part in re.findall(r'[\d.]+', string)]
+        parts = [float(part.replace(',', '.')) for part in re.findall(r'[\d.,]+', string)]  # noqa: E501
         if parts:
             return math.copysign(lat_long.to_dec_deg(*parts), negative)
         else:
