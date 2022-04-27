@@ -2,12 +2,9 @@ name: CI
 
 on:
   push:
-    branches: ["master"]
+#    branches: ["master"]
   pull_request:
     branches: ["master"]
-  schedule:
-    - cron: 50 1 * * 1
-  workflow_dispatch:
 
 jobs:
   tests:
@@ -16,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["2.7", "3.6", "3.7", "3.8", "3.9", "pypy3"]
+        python-version: ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "pypy3"]
 
     steps:
       - uses: "actions/checkout@v2"
