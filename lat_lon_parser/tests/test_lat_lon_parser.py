@@ -123,3 +123,4 @@ invalid_values = ["some_crap",
 def test_parse_invalid(string):
     with pytest.raises(ValueError):
         parse(string)
+#    assert False
