@@ -13,6 +13,7 @@ from __future__ import (unicode_literals,
 
 import math
 
+
 def to_dec_deg(d=0, m=0, s=0, max=180):
     """
     DecDegrees = to_dec_deg(d=0, m=0, s=0)

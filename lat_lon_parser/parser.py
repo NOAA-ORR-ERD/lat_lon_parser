@@ -13,6 +13,8 @@ Decimal degrees (easy):
 Decimal Degrees with quadrant:
    23.43 N
    45.21 W
+   N 23.43
+   W 45.21
 
 Degrees, decimal minutes: (now it starts getting tricky!)
   23° 25.800'
@@ -50,9 +52,16 @@ Degrees, Minutes, Seconds: (really fun!!!)
 
   - num<any symbol>[W or E or N or S] :: decimal degrees
 
-  - num<any symbol>num<any symbol>[W or E or N or S]:: degrees, decimal minutes
+  - num<any symbol>num<any symbol>[W or E or N or S] :: degrees, decimal minutes
 
-  - num <any symbol> num <any symbol> num <any symbol>[W or E or N or S]::
+  - num <any symbol> num <any symbol> num <any symbol>[W or E or N or S] ::
+    degrees, minutes, decimal seconds
+
+  - [W or E or N or S]<any symbol>num :: decimal degrees
+
+  - [W or E or N or S]<any symbol>num<any symbol>num :: degrees, decimal minutes
+
+  - [W or E or N or S]<any symbol>num<any symbol>num<any symbol>num ::
     degrees, minutes, decimal seconds
 
   W or S will return a negative result
@@ -99,15 +108,20 @@ def parse(string):
     string = string.replace('south', 's')
     string = string.replace('east', 'e')
     string = string.replace('west', 'w')
+    # replace cyrillic cardinal directions:
+    string = string.replace('с', 'n')
+    string = string.replace('ю', 's')
+    string = string.replace('в', 'e')
+    string = string.replace('з', 'w')
 
     # change W and S to a negative value
     negative = -1 if string.endswith(('w', 's')) else 1
-    negative = -1 if string.startswith('-') else negative
+    negative = -1 if string.startswith(('-', 'w', 's')) else negative
 
     try:
-        parts = re.findall(r'[\d.]+', string)
+        parts = re.findall(r'\d+(?:[.,]\d+)?', string)
         if parts:
-            parts = [float(part) for part in parts]
+            parts = [float(part.replace(',', '.')) for part in parts]
             return math.copysign(lat_long.to_dec_deg(*parts), negative)
         else:
             raise ValueError()
