@@ -11,8 +11,6 @@
   :target: https://github.com/NOAA-ORR-ERD/lat_lon_parser/
 
 
-
-
 ##############
 lat_lon_parser
 ##############
@@ -147,6 +145,36 @@ Functions for converting to various string formats::
   "23° 45.000'"
   >>> to_str(23, 45, 6.7)
   '23° 45\' 6.70"'
+
+
+Usage with Pandas
+-----------------
+
+Question from a user:
+
+How to apply this lat_lon_parser on pandas dataframe specific column?
+
+Turns out it's straightforward -- just pass the `parse` function to apply::
+
+
+    In [20]: df = pandas.DataFrame({'coords':["12d13'N","32 5 14", "30.123W"]})
+
+    In [21]: df
+    Out[21]:
+        coords
+    0  12d13'N
+    1  32 5 14
+    2  30.123W
+
+    In [22]: df['coords'] = df['coords'].apply(parse)
+
+    In [23]: df
+    Out[23]:
+          coords
+    0  12.216667
+    1  32.087222
+    2 -30.123000
+
 
 
 
