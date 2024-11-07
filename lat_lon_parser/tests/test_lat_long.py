@@ -52,6 +52,18 @@ class Test_LatLongErrors():
         with pytest.raises(ValueError):
             lat_long.to_dec_deg(d=30, m=4.5, s=6)
 
+    def test_nan_d(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=float('nan'), m=23, s=6)
+
+    def test_nan_m(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=30, m=float('nan'), s=6)
+
+    def test_nan_s(self):
+        with pytest.raises(ValueError):
+            lat_long.to_dec_deg(d=30, m=34, s=float('nan'))
+
 
 class Test_LatLong:
 

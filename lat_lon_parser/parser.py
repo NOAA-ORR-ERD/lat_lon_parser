@@ -122,7 +122,10 @@ def parse(string):
         parts = re.findall(r'\d+(?:[.,]\d+)?', string)
         if parts:
             parts = [float(part.replace(',', '.')) for part in parts]
-            return math.copysign(lat_long.to_dec_deg(*parts), negative)
+            result = math.copysign(lat_long.to_dec_deg(*parts), negative)
+            if not math.isfinite(result):
+                raise ValueError()
+            return result
         else:
             raise ValueError()
     except ValueError:
