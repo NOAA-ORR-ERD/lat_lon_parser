@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lat_lon_parser"
+authors = [
+    {name = "Christopher H. Barker", email = "Chris.Barker@noaa.gov"},
+]
+description = "Simple parser for latitude-longitude strings"
+readme = "README.rst"
+requires-python = ">=3.9"
+keywords = ["latitude", "longitude", "coordinates"]
+license = {text = "CC0 1.0 Universal"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "lat_lon_parser.__version__"}
+

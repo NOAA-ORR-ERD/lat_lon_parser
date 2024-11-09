@@ -17,19 +17,13 @@ lat_lon_parser
 
 Code for parsing lat-long coordinates in "various" formats, and for converting between lat-long formats (e.g. decimal degrees to degrees-minutes-seconds)
 
-Note: perhaps it would be better to integrate this with a more full featured lib like:
-
-https://pypi.python.org/pypi/LatLon23
-
-But that one does not seem to support parsing unknown formats at this point -- and it's GPL, and perhaps a little more complex and structured than it needs to be.
+The goal is to abide by Postel's Law: it will accept almost anything that can be unambiguously interpreted a latitude or longitude coordinates. It's not looking for particular symbols, etc.
 
 Parsing Latitude and Longitude strings
 =======================================
 
 Usage:
 ------
-
-from lat_lon_parser import parse
 
 .. code-block::
 
@@ -47,7 +41,7 @@ Decimal degrees (easy)::
    23.43
    -45.21
 
-Decimal Degrees with quadrant::
+Decimal Degrees with hemisphere::
 
    23.43 N
    45.21 W
