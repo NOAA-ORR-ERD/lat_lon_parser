@@ -156,6 +156,14 @@ invalid_values = ["some_crap",
                   #
                   "92 92",  # too large a minute value
                   """3° 25' 61.0" N""",  # too large a second value
+                  # more numbers than degrees, minutes and seconds. A fourth
+                  # used to reach to_dec_deg's max keyword and raise the degree
+                  # bound, and a fifth raised TypeError rather than ValueError.
+                  "1 2 3 4 5",
+                  """23° 25' 48.0" N, 45° 12' 36.0" W""",  # a pair, not one coordinate
+                  """45° 12' 36.05" N 100m""",  # trailing altitude
+                  "190 0 0 200",  # out of range degrees, with max overridden
+                  "2024-01-15 23 25 48",  # date prefix
                   ]
 
 

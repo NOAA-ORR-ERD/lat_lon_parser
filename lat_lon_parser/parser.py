@@ -120,7 +120,11 @@ def parse(string):
 
     try:
         parts = re.findall(r'\d+(?:[.,]\d+)?', string)
-        if parts:
+        # to_dec_deg takes at most degrees, minutes and seconds. Anything longer
+        # is not a single coordinate: a fourth number would bind to to_dec_deg's
+        # max keyword and quietly raise the degree bound, and a fifth raises
+        # TypeError, which this function does not promise to its callers.
+        if parts and len(parts) <= 3:
             parts = [float(part.replace(',', '.')) for part in parts]
             result = math.copysign(lat_long.to_dec_deg(*parts), negative)
             if not math.isfinite(result):
