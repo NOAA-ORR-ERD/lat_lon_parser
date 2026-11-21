@@ -124,3 +124,14 @@ class Test_LatLong:
         d, m, s = -0.0, 3, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
         assert lat_long.to_str_deg_min_sec(DecDeg) == '''-0\xb0 3' 15.00"'''
+
+    def test_DMStringCarry(self):
+        # 59.9999994' rounds to 60.000' -> carried into the degrees
+        assert lat_long.to_str_deg_min(10.99999999) == "11\xb0 0.000'"
+        assert lat_long.to_str_deg_min(-0.99999999) == "-1\xb0 0.000'"
+
+    def test_DMSStringCarry(self):
+        # 59.99996" rounds to 60.00" -> carried into minutes and degrees
+        assert lat_long.to_str_deg_min_sec(10.99999999) == "11\xb0 0' 0.00\""
+        assert lat_long.to_str_deg_min_sec(-45.49999999) == "-45\xb0 30' 0.00\""
+        assert lat_long.to_str_deg_min_sec(0.9999999) == "1\xb0 0' 0.00\""
