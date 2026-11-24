@@ -60,13 +60,20 @@ def to_str_dec_deg(d=0, m=0, s=0):
 
 
 def to_str_deg_min(DecDegrees):
-    (Degrees, Minutes) = to_deg_min(DecDegrees)
-    return to_str(Degrees, Minutes)
+    # Round to the printed precision (0.001') before splitting, so that
+    # e.g. 59.9996' carries into the next degree instead of printing 60.000'
+    minutes = round(abs(DecDegrees) * 60, 3)
+    degrees, minutes = divmod(minutes, 60)
+    return to_str(math.copysign(degrees, DecDegrees), minutes)
 
 
 def to_str_deg_min_sec(DecDegrees):
-    (deg, min, sec) = to_deg_min_sec(DecDegrees)
-    return to_str(deg, min, sec)
+    # Round to the printed precision (0.01") before splitting, so that
+    # e.g. 59.996" carries into the next minute instead of printing 60.00"
+    seconds = round(abs(DecDegrees) * 3600, 2)
+    minutes, seconds = divmod(seconds, 60)
+    degrees, minutes = divmod(minutes, 60)
+    return to_str(math.copysign(degrees, DecDegrees), minutes, seconds)
 
 
 def to_str(deg, min=None, sec=None):
