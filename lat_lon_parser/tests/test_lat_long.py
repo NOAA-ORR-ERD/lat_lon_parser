@@ -4,17 +4,13 @@ tests for lat_long.py
 This can be tricky to make sure the FP issues are addressed correctly
 """
 
-from __future__ import (unicode_literals,
-                        absolute_import,
-                        division,
-                        print_function)
-
-from lat_lon_parser import lat_long
 
 import pytest
 
+from lat_lon_parser import lat_long
 
-class Test_LatLongErrors():
+
+class Test_LatLongErrors:
 
     def test_NegativeMinutes(self):
         with pytest.raises(ValueError):

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
 Code for parsing lat-long coordinates in "various" formats
 
@@ -72,14 +69,10 @@ Degrees, Minutes, Seconds: (really fun!!!)
   <any symbol> can be literally anything
 
 """
-from __future__ import (unicode_literals,
-                        absolute_import,
-                        division,
-                        print_function)
-from . import lat_long
-
 import math
 import re
+
+from . import lat_long
 
 
 def parse(string):
@@ -133,4 +126,4 @@ def parse(string):
         else:
             raise ValueError()
     except ValueError:
-        raise ValueError("%r is not a valid coordinate string" % orig_string)
+        raise ValueError(f"{orig_string!r} is not a valid coordinate string")

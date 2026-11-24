@@ -1,15 +1,8 @@
-#!/usr/bin/env python
-
 """
 Utilities for converting to/from floats to Sexagesimal:
 
 degrees, minutes, seconds ...
-
 """
-from __future__ import (unicode_literals,
-                        absolute_import,
-                        division,
-                        print_function)
 
 import math
 
@@ -85,9 +78,9 @@ def to_str(deg, min=None, sec=None):
     :param sec=None: seconds value
     """
     if min is None and sec is None:
-        s = "{:.6f}\xb0".format(deg)
+        s = f"{deg:.6f}\xb0"
     elif sec is None:
-        s = "{:.0f}\xb0 {:.3f}'".format(deg, min)
+        s = f"{deg:.0f}\xb0 {min:.3f}'"
     else:
-        s = "{:.0f}\xb0 {:.0f}' {:.2f}\"".format(deg, min, sec)
+        s = f"{deg:.0f}\xb0 {min:.0f}' {sec:.2f}\""
     return s

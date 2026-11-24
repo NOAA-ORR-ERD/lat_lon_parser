@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 """
 test_lat_lon_parser
 ----------------------------------
@@ -8,16 +5,11 @@ test_lat_lon_parser
 Tests for `lat_lon_parser` module.
 """
 
-from __future__ import (unicode_literals,
-                        absolute_import,
-                        division,
-                        print_function)
-
 import pytest
 
 from lat_lon_parser import parse
 
-# note: tripple quotes strings to support both ' and " in the string
+# note: triple quotes strings to support both ' and " in the string
 # test code
 test_values = [  # decimal degrees
                ('23.43', 23.43),
@@ -72,8 +64,8 @@ test_values = [  # decimal degrees
                ("""-45 12 36.0""", -45.21),
 
                # leading hemisphere
-               ("""N 23° 25' 48.0""""", 23.43),
-               ("""S 45° 12' 36.0""""", -45.21),
+               ("""N 23° 25' 48.0""", 23.43),
+               ("""S 45° 12' 36.0""", -45.21),
 
                ("""N 23 25 48.0""", 23.43),
                ("""S 45 12 36.0""", -45.21),
