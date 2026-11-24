@@ -1,0 +1,23 @@
+[workspace]
+authors = ["Chris Barker <Chris.Barker@noaa.gov>"]
+channels = ["conda-forge"]
+name = "lat_lon_parser"
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+version = "0.1.0"
+
+[pypi-dependencies]
+# Editable install of the current directory
+lat_lon_parser = { path = ".", editable = true }
+
+# dev environment for lat-long-parser
+[dependencies]
+# lowest Python version for dev.
+python = "3.12.*"
+pytest = "*"
+ruff = "*"
+
+[tasks]
+test = "pytest --pyargs lat_lon_parser"
+
+lint = "ruff check lat_lon_parser"
+
