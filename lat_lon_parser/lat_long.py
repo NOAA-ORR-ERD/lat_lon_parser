@@ -6,6 +6,7 @@ degrees, minutes, seconds ...
 
 import math
 
+
 def to_dec_deg(d=0, m=0, s=0, max=180):
     """
     dec_degrees = to_dec_deg(d=0, m=0, s=0)
@@ -36,9 +37,14 @@ def to_deg_min(dec_degrees):
 
     Degrees, Minutes
     """
-    degrees, remainder = divmod(abs(dec_degrees), 1)
+    # degrees, remainder = divmod(abs(dec_degrees), 1)
 
-    return math.copysign(degrees, dec_degrees), remainder * 60
+    # return math.copysign(degrees, dec_degrees), remainder * 60
+
+    minutes = abs(dec_degrees) * 60
+    degrees, minutes = divmod(minutes, 60)
+
+    return math.copysign(degrees, dec_degrees), minutes
 
 
 def to_deg_min_sec(dec_degrees):
@@ -47,10 +53,13 @@ def to_deg_min_sec(dec_degrees):
 
     Degrees, Minutes, Seconds
     """
-    degrees, remainder = divmod(round(abs(dec_degrees), 9), 1)
-    minutes, remainder = divmod(round(remainder * 60, 9), 1)
+    # is there any reason to round?
+    # seconds = round(abs(dec_degrees) * 3600, 4)
+    seconds = abs(dec_degrees) * 3600
+    minutes, seconds = divmod(seconds, 60)
+    degrees, minutes = divmod(minutes, 60)
 
-    return math.copysign(degrees, dec_degrees), minutes, remainder * 60
+    return math.copysign(degrees, dec_degrees), minutes, seconds
 
 
 def to_str_dec_deg(d=0, m=0, s=0):
