@@ -9,7 +9,7 @@ import math
 
 def to_dec_deg(d=0, m=0, s=0, max=180):
     """
-    DecDegrees = to_dec_deg(d=0, m=0, s=0)
+    dec_degrees = to_dec_deg(d=0, m=0, s=0)
 
     converts degrees, minutes, seconds to decimal degrees
     (returned as a float).
@@ -31,42 +31,65 @@ def to_dec_deg(d=0, m=0, s=0, max=180):
     return math.copysign(abs(d) + m / 60 + s / 3600, d)
 
 
-def to_deg_min(DecDegrees):
+def to_deg_min(dec_degrees):
     """
     Converts from decimal (binary float) degrees to:
-      Degrees, Minutes
+
+    Degrees, Minutes
     """
-    degrees, remainder = divmod(abs(DecDegrees), 1)
+    # degrees, remainder = divmod(abs(dec_degrees), 1)
 
-    # float to preserve -0.0
-    return math.copysign(degrees, DecDegrees), remainder * 60
+    # return math.copysign(degrees, dec_degrees), remainder * 60
+
+    minutes = abs(dec_degrees) * 60
+    degrees, minutes = divmod(minutes, 60)
+
+    return math.copysign(degrees, dec_degrees), minutes
 
 
-def to_deg_min_sec(DecDegrees):
+def to_deg_min_sec(dec_degrees):
     """
     Converts from decimal (binary float) degrees to:
-      Degrees, Minutes, Seconds
-    """
-    degrees, remainder = divmod(round(abs(DecDegrees), 9), 1)
-    minutes, remainder = divmod(round(remainder * 60, 9), 1)
 
-    # float to preserve -0.0
-    return math.copysign(degrees, DecDegrees), minutes, remainder * 60
+    Degrees, Minutes, Seconds
+    """
+    # is there any reason to round?
+    # seconds = round(abs(dec_degrees) * 3600, 4)
+    seconds = abs(dec_degrees) * 3600
+    minutes, seconds = divmod(seconds, 60)
+    degrees, minutes = divmod(minutes, 60)
+
+    return math.copysign(degrees, dec_degrees), minutes, seconds
 
 
 def to_str_dec_deg(d=0, m=0, s=0):
-    Degrees = to_dec_deg(d, m, s)
-    return to_str(Degrees)
+    degrees = to_dec_deg(d, m, s)
+    return to_str(degrees)
 
 
-def to_str_deg_min(DecDegrees):
-    (Degrees, Minutes) = to_deg_min(DecDegrees)
-    return to_str(Degrees, Minutes)
+def to_str_deg_min(dec_degrees, precision=3):
+    # Round to the printed precision (0.001') before splitting, so that
+    # e.g. 59.9996' carries into the next degree instead of printing 60.000'
+    minutes = round(abs(dec_degrees) * 60, precision)
+    degrees, minutes = divmod(minutes, 60)
+    return to_str(math.copysign(degrees, dec_degrees), minutes)
 
 
-def to_str_deg_min_sec(DecDegrees):
-    (deg, min, sec) = to_deg_min_sec(DecDegrees)
-    return to_str(deg, min, sec)
+def to_str_deg_min_sec(dec_degrees, precision=2):
+    """
+    Convert to deg, min, sec form as a string, e.g.
+
+    -45° 30' 0.00"
+
+    :param deg: degrees value
+
+    """
+    # Round seconds to the printed precision (0.01") before splitting, so that
+    # e.g. 59.996" carries into the next minute instead of printing 60.00"
+    seconds = round(abs(dec_degrees) * 3600, precision)
+    minutes, seconds = divmod(seconds, 60)
+    degrees, minutes = divmod(minutes, 60)
+    return to_str(math.copysign(degrees, dec_degrees), minutes, seconds)
 
 
 def to_str(deg, min=None, sec=None):

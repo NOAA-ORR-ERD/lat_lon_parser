@@ -4,7 +4,6 @@ tests for lat_long.py
 This can be tricky to make sure the FP issues are addressed correctly
 """
 
-
 import pytest
 
 from lat_lon_parser import lat_long
@@ -104,12 +103,12 @@ class Test_LatLong:
     def test_DMSString(self):
         d, m, s = 120, 45, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        assert lat_long.to_str_deg_min_sec(DecDeg) == "120\xb0 45' 15.00\""
+        assert lat_long.to_str_deg_min_sec(DecDeg) == '''120\xb0 45' 15.00"'''
 
     def test_DMSString2(self):
         d, m, s = -120, 3, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
-        assert lat_long.to_str_deg_min_sec(DecDeg) == "-120\xb0 3' 15.00\""
+        assert lat_long.to_str_deg_min_sec(DecDeg) == '''-120\xb0 3' 15.00\"'''
 
     def test_DMtringZero(self):
         d, m, s = -0.0, 3, 0
@@ -120,3 +119,28 @@ class Test_LatLong:
         d, m, s = -0.0, 3, 15
         DecDeg = lat_long.to_dec_deg(d, m, s)
         assert lat_long.to_str_deg_min_sec(DecDeg) == '''-0\xb0 3' 15.00"'''
+
+    def test_DMStringCarry(self):
+        # 59.9999994' rounds to 60.000' -> carried into the degrees
+        assert lat_long.to_str_deg_min(10.99999999) == "11\xb0 0.000'"
+        assert lat_long.to_str_deg_min(-0.99999999) == "-1\xb0 0.000'"
+
+    def test_DMSStringCarry(self):
+        # 59.99996" rounds to 60.00" -> carried into minutes and degrees
+        assert lat_long.to_str_deg_min_sec(10.99999999) == '''11\xb0 0' 0.00"'''
+        assert lat_long.to_str_deg_min_sec(-45.49999999) == '''-45\xb0 30' 0.00"'''
+        assert lat_long.to_str_deg_min_sec(0.9999999) == '''1\xb0 0' 0.00"'''
+
+close_to_integers = [float('10.' + '9'*i) for i in range(15)]
+close_to_integers.extend(5 + 59 / 60 + float('59.' + '9'*i) / 3600 for i in range(6))
+@pytest.mark.parametrize("dec_deg", close_to_integers)
+def test_DMSString_close(dec_deg):
+    """
+    Tests to make sure anything close to an integer degrees won't
+    round up to 60 seconds.
+    """
+    string = lat_long.to_str_deg_min_sec(dec_deg)
+    deg, min, sec = (float(s[:-1]) for s in string.split())
+    print(deg, min, sec)
+    assert min < 60.0
+    assert sec < 60.0
