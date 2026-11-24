@@ -9,7 +9,7 @@ authors = [
 ]
 description = "Simple parser for latitude-longitude strings"
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 keywords = ["latitude", "longitude", "coordinates"]
 license = {text = "CC0 1.0 Universal"}
 classifiers = [
