@@ -106,6 +106,8 @@ def parse(string):
     string = string.replace('ю', 's')
     string = string.replace('в', 'e')
     string = string.replace('з', 'w')
+    # treat the unicode minus sign like a hyphen-minus:
+    string = string.replace('\N{MINUS SIGN}', '-')
 
     # change W and S to a negative value
     negative = -1 if string.endswith(('w', 's')) else 1

@@ -106,6 +106,11 @@ test_values = [  # decimal degrees
                (""" -45d-32'-12" """, -45.536666666666667),
                ("""- 45-32-12""", -45.536666666666667),
 
+               # unicode minus sign (U+2212) instead of a hyphen-minus:
+               ("""\N{MINUS SIGN}45.21""", -45.21),
+               ("""\N{MINUS SIGN}45° 12' 36.0" """, -45.21),
+               ("""\N{MINUS SIGN} 45 12 36.0""", -45.21),
+
                # cyrillic number locale
                ('23,43', 23.43),
                ('-45,21', -45.21),
